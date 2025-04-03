@@ -13,7 +13,7 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('head')
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen">

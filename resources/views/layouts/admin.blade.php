@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Админка')</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="bg-gray-100 text-gray-800">
 <div class="min-h-screen flex">
