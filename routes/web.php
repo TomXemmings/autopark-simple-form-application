@@ -7,8 +7,12 @@ use App\Http\Controllers\AdminController;
 Route::get('/', function () {
     return view('steps.step0');
 });
+Route::get('/login', function () {
+    return view('steps.step0');
+})->name('login');
 
 Route::post('/register-phone', [AuthController::class, 'registerPhone']);
+Route::post('/login',          [AuthController::class, 'registerPhone']);
 Route::post('/check-phone',    [AuthController::class, 'checkPhone']);
 
 Route::middleware(['auth', 'step.progress'])->group(function () {
