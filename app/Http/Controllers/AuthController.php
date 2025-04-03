@@ -23,7 +23,7 @@ class AuthController extends Controller
     public function registerPhone(Request $request)
     {
         $request->validate([
-            'phone' => ['required', 'regex:/^\d{10}$/'],
+            'phone' => ['required', 'regex:/^\d{11}$/'],
             'password' => ['required', 'min:6'],
         ]);
 
