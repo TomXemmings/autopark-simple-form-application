@@ -47,6 +47,7 @@
                 e.preventDefault();
 
                 const phone = $('#phone').val();
+                const fullPhone = '7' + phone;
                 const password = $('#password').val();
 
                 if (phone.length !== 10) {
@@ -63,7 +64,7 @@
 
                 $.post("{{ url('/register-phone') }}", {
                     _token: '{{ csrf_token() }}',
-                    phone: phone,
+                    phone: fullPhone,
                     password: password
                 })
                     .done(function (data) {
