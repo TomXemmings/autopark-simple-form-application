@@ -42,7 +42,9 @@
                 </div>
 
                 <div>
-                    <label for="court_certificate" class="block text-sm font-medium text-gray-700 mb-1">Справка из суда *</label>
+                    <label for="court_certificate" class="block text-sm font-medium text-gray-700 mb-1">
+                        Справка об отсутствии судимости *
+                    </label>
                     <input type="file" name="court_certificate" accept=".jpg,.jpeg,.png,.pdf"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
@@ -78,7 +80,6 @@
         @endif
     </div>
 @endsection
-
 
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
