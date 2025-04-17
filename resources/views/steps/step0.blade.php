@@ -5,6 +5,11 @@
 @section('content')
     <div class="max-w-md mx-auto mt-20 bg-white p-8 rounded shadow">
         <h1 class="text-xl font-semibold mb-6 text-center">Регистрация</h1>
+        <p class="text-gray-600 text-sm mb-6 text-center">
+            Введите свой номер телефона и пароль.<br>
+            Если вы <strong>новый пользователь</strong> — будет создан аккаунт.<br>
+            Если вы уже <strong>зарегистрированы</strong> — вы будете авторизованы.
+        </p>
 
         <form id="phone-form" method="POST" action="{{ url('/register-phone') }}">
             @csrf

@@ -23,35 +23,44 @@ class AuthController extends Controller
     public function registerPhone(Request $request)
     {
         $request->validate([
-            'phone' => ['required', 'regex:/^\d{11}$/'],
+            'phone'    => ['required', 'regex:/^\d{11}$/'],
             'password' => ['required', 'min:6'],
         ]);
 
         $phone = $request->input('phone');
+        $password = $request->input('password');
 
         $user = User::where('phone', $phone)->first();
 
         if ($user) {
-            return response()->json([
-                'message' => 'Пользователь уже существует',
-                'user'    => $user,
-                'step'    => $user->current_step,
-            ]);
+            if (Hash::check($password, $user->password)) {
+                Auth::login($user);
+
+                return response()->json([
+                    'message' => 'Пользователь найден и авторизован',
+                    'user'    => $user,
+                    'step'    => $user->current_step,
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Неверный пароль',
+                ], 401);
+            }
         }
 
         $userCode = User::generateUserCode();
 
         $newUser = User::create([
-            'phone'     => $phone,
-            'user_code' => $userCode,
-            'password'  => Hash::make($request->password),
+            'phone'        => $phone,
+            'user_code'    => $userCode,
+            'password'     => Hash::make($password),
             'current_step' => 1,
         ]);
 
         Auth::login($newUser);
 
         return response()->json([
-            'message' => 'Пользователь создан',
+            'message' => 'Пользователь создан и авторизован',
             'user'    => $newUser,
             'step'    => 1,
         ]);
