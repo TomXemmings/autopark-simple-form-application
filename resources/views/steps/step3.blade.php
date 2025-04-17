@@ -62,7 +62,7 @@
                            class="form-input border rounded p-2 w-full"
                            placeholder="ФГИС лицензия" required>
                     <div id="fgis-hint" class="hidden mt-2">
-                        <img src="/images/sample-fgis-license.png" alt="ФГИС пример" class="rounded border">
+                        <img src="{{ asset('images/image-1.jpg') }}" alt="ФГИС пример" class="rounded border">
                     </div>
                 </div>
 
@@ -78,7 +78,7 @@
                     <input type="date" name="fgis_date" id="fgis_date"
                            class="form-input border rounded p-2 w-full" required>
                     <div id="fgis-date-hint" class="hidden mt-2">
-                        <img src="/images/sample-fgis-date.png" alt="Дата ФГИС пример" class="rounded border">
+                        <img src="{{ asset('images/image-2.jpg') }}" alt="Дата ФГИС пример" class="rounded border">
                     </div>
                 </div>
             </div>
