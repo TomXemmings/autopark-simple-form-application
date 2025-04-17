@@ -61,7 +61,7 @@
                 })
                     .done(function (data) {
                         if (data.step) {
-                            window.location.href = '{{ route('step.1') }}';
+                            window.location.href = '{{ url('step') }}-' + data.step;
                         }
                     })
                     .fail(function (xhr) {
