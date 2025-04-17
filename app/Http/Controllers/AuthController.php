@@ -236,12 +236,12 @@ class AuthController extends Controller
     public function stepFour(Request $request)
     {
         $request->validate([
-            'license_front'         => 'required|file|mimes:jpg,jpeg,png',
-            'license_back'          => 'required|file|mimes:jpg,jpeg,png',
-            'insurance_photo'       => 'required|file|mimes:jpg,jpeg,png',
+            'license_front'         => 'required|file|mimes:jpg,jpeg,png,pdf',
+            'license_back'          => 'required|file|mimes:jpg,jpeg,png,pdf',
+            'insurance_photo'       => 'required|file|mimes:jpg,jpeg,png,pdf',
             'court_certificate'     => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'passport_main'         => 'required|file|mimes:jpg,jpeg,png',
-            'passport_registration' => 'required|file|mimes:jpg,jpeg,png',
+            'passport_main'         => 'required|file|mimes:jpg,jpeg,png,pdf',
+            'passport_registration' => 'required|file|mimes:jpg,jpeg,png,pdf',
         ]);
 
         $user = auth()->user();
