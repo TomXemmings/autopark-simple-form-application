@@ -58,17 +58,17 @@
 
         <hr class="my-6">
 
-        <h3 class="text-lg font-semibold mb-2">Загруженные документы:</h3>
-        <div class="space-y-2">
-            @foreach ($user->documents as $doc)
-                <div class="flex items-center justify-between border p-2 rounded bg-gray-50">
-                    <div>
-                        <strong>{{ $doc->type }}</strong> —
-                        <a href="{{ asset($doc->file_path) }}" target="_blank" class="text-blue-600 underline">Просмотр</a>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+{{--        <h3 class="text-lg font-semibold mb-2">Загруженные документы:</h3>--}}
+{{--        <div class="space-y-2">--}}
+{{--            @foreach ($user->documents as $doc)--}}
+{{--                <div class="flex items-center justify-between border p-2 rounded bg-gray-50">--}}
+{{--                    <div>--}}
+{{--                        <strong>{{ $doc->type }}</strong> —--}}
+{{--                        <a href="{{ asset($doc->file_path) }}" target="_blank" class="text-blue-600 underline">Просмотр</a>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            @endforeach--}}
+{{--        </div>--}}
 
         @if ($user->documents->count() >= 6)
             <form method="POST" action="{{ route('user.complete') }}" class="mt-6">
