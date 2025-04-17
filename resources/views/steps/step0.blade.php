@@ -4,11 +4,11 @@
 
 @section('content')
     <div class="max-w-md mx-auto mt-20 bg-white p-8 rounded shadow">
-        <h1 class="text-xl font-semibold mb-6 text-center">Регистрация</h1>
+        <h1 class="text-xl font-semibold mb-6 text-center">Вход / Регистрация</h1>
         <p class="text-gray-600 text-sm mb-6 text-center">
-            Введите свой номер телефона и пароль.<br>
-            Если вы <strong>новый пользователь</strong> — будет создан аккаунт.<br>
-            Если вы уже <strong>зарегистрированы</strong> — вы будете авторизованы.
+            Введите свой номер телефона.<br>
+            Если вы <strong>уже зарегистрированы</strong> — вы будете авторизованы.<br>
+            Если вы <strong>впервые</strong> — аккаунт будет создан автоматически.
         </p>
 
         <form id="phone-form" method="POST" action="{{ url('/register-phone') }}">
@@ -23,12 +23,6 @@
                        placeholder="___ ___ __ __"
                        required>
             </div>
-
-            <label class="block mb-2 text-sm font-medium text-gray-700">Пароль</label>
-            <input type="password" name="password" id="password"
-                   class="w-full border rounded p-2"
-                   placeholder="Минимум 6 символов"
-                   required>
 
             <p id="phone-error" class="text-red-600 text-sm mt-2 hidden"></p>
 
@@ -53,15 +47,9 @@
 
                 const phone = $('#phone').val();
                 const fullPhone = '7' + phone;
-                const password = $('#password').val();
 
                 if (phone.length !== 10) {
                     $('#phone-error').text('Введите 10 цифр номера телефона.').removeClass('hidden');
-                    return;
-                }
-
-                if (password.length < 6) {
-                    $('#phone-error').text('Пароль должен быть не менее 6 символов.').removeClass('hidden');
                     return;
                 }
 
@@ -69,8 +57,7 @@
 
                 $.post("{{ url('/register-phone') }}", {
                     _token: '{{ csrf_token() }}',
-                    phone: fullPhone,
-                    password: password
+                    phone: fullPhone
                 })
                     .done(function (data) {
                         if (data.step) {

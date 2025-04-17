@@ -11,6 +11,7 @@ use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -23,29 +24,21 @@ class AuthController extends Controller
     public function registerPhone(Request $request)
     {
         $request->validate([
-            'phone'    => ['required', 'regex:/^\d{11}$/'],
-            'password' => ['required', 'min:6'],
+            'phone' => ['required', 'regex:/^\d{11}$/'],
         ]);
 
         $phone = $request->input('phone');
-        $password = $request->input('password');
 
         $user = User::where('phone', $phone)->first();
 
         if ($user) {
-            if (Hash::check($password, $user->password)) {
-                Auth::login($user);
+            Auth::login($user);
 
-                return response()->json([
-                    'message' => 'Пользователь найден и авторизован',
-                    'user'    => $user,
-                    'step'    => $user->current_step,
-                ]);
-            } else {
-                return response()->json([
-                    'message' => 'Неверный пароль',
-                ], 401);
-            }
+            return response()->json([
+                'message' => 'Пользователь найден и авторизован',
+                'user'    => $user,
+                'step'    => $user->current_step,
+            ]);
         }
 
         $userCode = User::generateUserCode();
@@ -53,7 +46,7 @@ class AuthController extends Controller
         $newUser = User::create([
             'phone'        => $phone,
             'user_code'    => $userCode,
-            'password'     => Hash::make($password),
+            'password'     => Hash::make(Str::random(12)),
             'current_step' => 1,
         ]);
 
@@ -65,6 +58,7 @@ class AuthController extends Controller
             'step'    => 1,
         ]);
     }
+
 
     /**
      * Login by password
