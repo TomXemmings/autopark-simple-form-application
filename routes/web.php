@@ -11,7 +11,7 @@ Route::get('/', function () {
 Route::post('/register-phone', [AuthController::class, 'registerPhone']);
 Route::post('/check-phone',    [AuthController::class, 'checkPhone']);
 
-Route::middleware(['auth', 'step.progress',])->group(function () {
+Route::middleware(['step.progress',])->group(function () {
     Route::view('/step-1', 'steps.step1')->name('step.1');
     Route::view('/step-2', 'steps.step2')->name('step.2');
     Route::view('/step-3', 'steps.step3')->name('step.3');
