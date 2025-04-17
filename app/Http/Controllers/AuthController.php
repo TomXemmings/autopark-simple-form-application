@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\AddressInfo;
 use App\Models\Document;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -15,11 +17,12 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+
     /**
-     * Check phone number and register if don`t exist
+     *  Check phone number and register if don`t exist
      *
-     * @param  Request      $request
-     * @return JsonResponse
+     * @param  Request                                                     $request
+     * @return Application|JsonResponse|RedirectResponse|Redirector|object
      */
     public function registerPhone(Request $request)
     {
@@ -34,11 +37,7 @@ class AuthController extends Controller
         if ($user) {
             Auth::login($user);
 
-            return response()->json([
-                'message' => 'Пользователь найден и авторизован',
-                'user'    => $user,
-                'step'    => $user->current_step,
-            ]);
+            return redirect('/step-' . $user->current_step ?? 1);
         }
 
         $userCode = User::generateUserCode();
