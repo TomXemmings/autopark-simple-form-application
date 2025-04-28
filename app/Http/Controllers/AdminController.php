@@ -235,49 +235,52 @@ class AdminController extends Controller
             'Content-Disposition' => 'attachment; filename="user_' . $user->id . '_export.csv"',
         ];
 
-        $fgisDate       = optional($user->insuranceInfo->fgis_date) ? Carbon::parse($user->insuranceInfo->fgis_date) : null;
-        $insuranceStart = optional($user->insuranceInfo->start_date) ? Carbon::parse($user->insuranceInfo->start_date) : null;
-        $insuranceEnd   = optional($user->insuranceInfo->end_date) ? Carbon::parse($user->insuranceInfo->end_date) : null;
-        $serviceDate    = optional($user->service_agreement_start_date) ? Carbon::parse($user->service_agreement_start_date) : null;
+        $insuranceInfo = optional($user->insuranceInfo);
+        $addressInfo   = optional($user->addressInfo);
+
+        $fgisDate       = $insuranceInfo->fgis_date ? Carbon::parse($insuranceInfo->fgis_date) : null;
+        $insuranceStart = $insuranceInfo->start_date ? Carbon::parse($insuranceInfo->start_date) : null;
+        $insuranceEnd   = $insuranceInfo->end_date ? Carbon::parse($insuranceInfo->end_date) : null;
+        $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
         $columns = [
             'LicenseNumber'                => $user->user_code ?? '',
-            'LicenseStartDate'             => optional($user->created_at)?->format('d.m.Y') ?? '',
-            'OrgForm'                      => '' ?? '',
-            'FullName'                     => '' ?? '',
-            'ShortName'                    => '' ?? '',
+            'LicenseStartDate'             => optional($user->created_at)->format('d.m.Y') ?? '',
+            'OrgForm'                      => '',
+            'FullName'                     => '',
+            'ShortName'                    => '',
             'SecondName'                   => $user->first_name ?? '',
             'FirstName'                    => $user->last_name ?? '',
             'MiddleName'                   => $user->middle_name ?? '',
-            'Ogrn'                         => '' ?? '',
+            'Ogrn'                         => '',
             'INN'                          => $user->inn ?? '',
-            'LegalAddress'                 => $user->addressInfo->city ?? '',
-            'Address'                      => $user->addressInfo->address ?? '',
+            'LegalAddress'                 => $addressInfo->city ?? '',
+            'Address'                      => $addressInfo->address ?? '',
             'TelephoneNumber'              => $user->phone ?? '',
-            'Email'                        => $user->addressInfo->email ?? '',
-            'AdditionalRequirement'        => 'Дополнительное требование' ?? '',
-            'ServiceMark'                  => 'НЕТ' ?? '',
-            'CommercialDesignation'        => 'НЕТ' ?? '',
-            'WithoutInvolvement'           => '' ?? '',
-            'MedicalExaminationAddress'    => '' ?? '',
-            'LicenseStatus'                => 1 ?? '',
-            'LicenseDecision'              => '+' ?? '',
-            'LicenseDecisionDate'          => optional($user->created_at)?->format('d.m.Y') ?? '',
-            'LicenseEndDate'               => optional($user->created_at)?->addYears(5)->format('d.m.Y') ?? '',
-            'InsuranceContractNumber'      => $user->insuranceInfo->policy_number ?? '',
-            'InsuranceContractStartDate'   => $insuranceStart?->format('d.m.Y') ?? '',
-            'InsuranceContractEndDate'     => $insuranceEnd?->format('d.m.Y') ?? '',
-            'InsuranceCompanyName'         => $user->insuranceInfo->company_name ?? '',
-            'ContractOfCarriageNumber'     => '' ?? '',
-            'ContractOfCarriageStartDate'  => '' ?? '',
-            'ContractOfCarriageEndDate'    => '' ?? '',
-            'OrderAgreementOgrn'           => 5157746192731 ?? '',
-            'DriverLicenseSeriesAndNumber' => $user->insuranceInfo->fgis_number ?? '',
-            'DriverLicenseStartDate'       => $fgisDate?->format('d.m.Y') ?? '',
-            'DriverLicenseEndDate'         => $fgisDate?->addYears(5)->format('d.m.Y') ?? '',
+            'Email'                        => $addressInfo->email ?? '',
+            'AdditionalRequirement'        => 'Дополнительное требование',
+            'ServiceMark'                  => 'НЕТ',
+            'CommercialDesignation'        => 'НЕТ',
+            'WithoutInvolvement'           => '',
+            'MedicalExaminationAddress'    => '',
+            'LicenseStatus'                => 1,
+            'LicenseDecision'              => '+',
+            'LicenseDecisionDate'          => optional($user->created_at)->format('d.m.Y') ?? '',
+            'LicenseEndDate'               => optional($user->created_at)->addYears(5)->format('d.m.Y') ?? '',
+            'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
+            'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
+            'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
+            'InsuranceCompanyName'         => $insuranceInfo->company_name ?? '',
+            'ContractOfCarriageNumber'     => '',
+            'ContractOfCarriageStartDate'  => '',
+            'ContractOfCarriageEndDate'    => '',
+            'OrderAgreementOgrn'           => '5157746192731',
+            'DriverLicenseSeriesAndNumber' => $insuranceInfo->fgis_number ?? '',
+            'DriverLicenseStartDate'       => $fgisDate ? $fgisDate->format('d.m.Y') : '',
+            'DriverLicenseEndDate'         => $fgisDate ? $fgisDate->copy()->addYears(5)->format('d.m.Y') : '',
             'ServiceAgreementNumber'       => $user->service_agreement_number ?? '',
-            'ServiceAgreementStartDate'    => $serviceDate?->format('d.m.Y') ?? '',
-            'ServiceAgreementEndDate'      => $serviceDate?->addYears(5)->format('d.m.Y') ?? '',
+            'ServiceAgreementStartDate'    => $serviceDate ? $serviceDate->format('d.m.Y') : '',
+            'ServiceAgreementEndDate'      => $serviceDate ? $serviceDate->copy()->addYears(5)->format('d.m.Y') : '',
         ];
 
         return response()->streamDownload(function () use ($columns) {
@@ -287,6 +290,7 @@ class AdminController extends Controller
             fclose($output);
         }, "user_export_{$user->id}.csv", $headers);
     }
+
 
     /**
      * Export selected drivers to csv
@@ -310,14 +314,17 @@ class AdminController extends Controller
             $user = User::with(['addressInfo', 'insuranceInfo'])->find($id);
             if (!$user) continue;
 
-            $fgisDate       = optional($user->insuranceInfo->fgis_date) ? Carbon::parse($user->insuranceInfo->fgis_date) : null;
-            $insuranceStart = optional($user->insuranceInfo->start_date) ? Carbon::parse($user->insuranceInfo->start_date) : null;
-            $insuranceEnd   = optional($user->insuranceInfo->end_date) ? Carbon::parse($user->insuranceInfo->end_date) : null;
-            $serviceDate    = optional($user->service_agreement_start_date) ? Carbon::parse($user->service_agreement_start_date) : null;
+            $insuranceInfo = optional($user->insuranceInfo);
+            $addressInfo = optional($user->addressInfo);
+
+            $fgisDate       = $insuranceInfo->fgis_date ? Carbon::parse($insuranceInfo->fgis_date) : null;
+            $insuranceStart = $insuranceInfo->start_date ? Carbon::parse($insuranceInfo->start_date) : null;
+            $insuranceEnd   = $insuranceInfo->end_date ? Carbon::parse($insuranceInfo->end_date) : null;
+            $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
             $columns = [
                 'LicenseNumber'                => $user->user_code ?? '',
-                'LicenseStartDate'             => optional($user->created_at)?->format('d.m.Y') ?? '',
+                'LicenseStartDate'             => optional($user->created_at)->format('d.m.Y') ?? '',
                 'OrgForm'                      => '',
                 'FullName'                     => '',
                 'ShortName'                    => '',
@@ -326,10 +333,10 @@ class AdminController extends Controller
                 'MiddleName'                   => $user->middle_name ?? '',
                 'Ogrn'                         => '',
                 'INN'                          => $user->inn ?? '',
-                'LegalAddress'                 => $user->addressInfo->city ?? '',
-                'Address'                      => $user->addressInfo->address ?? '',
+                'LegalAddress'                 => $addressInfo->city ?? '',
+                'Address'                      => $addressInfo->address ?? '',
                 'TelephoneNumber'              => $user->phone ?? '',
-                'Email'                        => $user->addressInfo->email ?? '',
+                'Email'                        => $addressInfo->email ?? '',
                 'AdditionalRequirement'        => 'Дополнительное требование',
                 'ServiceMark'                  => 'НЕТ',
                 'CommercialDesignation'        => 'НЕТ',
@@ -337,22 +344,22 @@ class AdminController extends Controller
                 'MedicalExaminationAddress'    => '',
                 'LicenseStatus'                => 1,
                 'LicenseDecision'              => '+',
-                'LicenseDecisionDate'          => optional($user->created_at)?->format('d.m.Y') ?? '',
-                'LicenseEndDate'               => optional($user->created_at)?->addYears(5)->format('d.m.Y') ?? '',
-                'InsuranceContractNumber'      => $user->insuranceInfo->policy_number ?? '',
-                'InsuranceContractStartDate'   => $insuranceStart?->format('d.m.Y') ?? '',
-                'InsuranceContractEndDate'     => $insuranceEnd?->format('d.m.Y') ?? '',
-                'InsuranceCompanyName'         => $user->insuranceInfo->company_name ?? '',
+                'LicenseDecisionDate'          => optional($user->created_at)->format('d.m.Y') ?? '',
+                'LicenseEndDate'               => optional($user->created_at)->addYears(5)->format('d.m.Y') ?? '',
+                'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
+                'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
+                'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
+                'InsuranceCompanyName'         => $insuranceInfo->company_name ?? '',
                 'ContractOfCarriageNumber'     => '',
                 'ContractOfCarriageStartDate'  => '',
                 'ContractOfCarriageEndDate'    => '',
                 'OrderAgreementOgrn'           => 5157746192731,
-                'DriverLicenseSeriesAndNumber' => $user->insuranceInfo->fgis_number ?? '',
-                'DriverLicenseStartDate'       => $fgisDate?->format('d.m.Y') ?? '',
-                'DriverLicenseEndDate'         => $fgisDate?->copy()->addYears(5)->format('d.m.Y') ?? '',
+                'DriverLicenseSeriesAndNumber' => $insuranceInfo->fgis_number ?? '',
+                'DriverLicenseStartDate'       => $fgisDate ? $fgisDate->format('d.m.Y') : '',
+                'DriverLicenseEndDate'         => $fgisDate ? $fgisDate->copy()->addYears(5)->format('d.m.Y') : '',
                 'ServiceAgreementNumber'       => $user->service_agreement_number ?? '',
-                'ServiceAgreementStartDate'    => $serviceDate?->format('d.m.Y') ?? '',
-                'ServiceAgreementEndDate'      => $serviceDate?->copy()->addYears(5)->format('d.m.Y') ?? '',
+                'ServiceAgreementStartDate'    => $serviceDate ? $serviceDate->format('d.m.Y') : '',
+                'ServiceAgreementEndDate'      => $serviceDate ? $serviceDate->copy()->addYears(5)->format('d.m.Y') : '',
             ];
 
             if (!$headerWritten) {
@@ -365,8 +372,13 @@ class AdminController extends Controller
 
         fclose($handle);
 
+        if (!file_exists($path) || filesize($path) === 0) {
+            file_put_contents($path, implode(';', array_keys($columns)).PHP_EOL);
+        }
+
         return response()->download($path)->deleteFileAfterSend(true);
     }
+
 
     /**
      * Print documents page
