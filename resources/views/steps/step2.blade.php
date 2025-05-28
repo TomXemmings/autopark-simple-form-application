@@ -18,7 +18,7 @@
                 </div>
 
                 <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Адрес *</label>
+                    <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Адрес по прописке (как в паспорте) *</label>
                     <input type="text" name="address" id="address"
                            class="form-input border rounded p-2 w-full"
                            placeholder="Адрес" required>

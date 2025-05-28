@@ -3,6 +3,8 @@
 @section('title', 'Ввод номера телефона')
 
 @section('content')
+    <h2 class="text-2xl font-bold text-center mt-12 mb-4">Оформление разрешения на перевозки</h2>
+
     <div class="max-w-md mx-auto mt-20 bg-white p-8 rounded shadow">
         <h1 class="text-xl font-semibold mb-6 text-center">Вход / Регистрация</h1>
         <p class="text-gray-600 text-sm mb-6 text-center">
