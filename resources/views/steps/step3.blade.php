@@ -11,7 +11,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label for="policy_number" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
                         Номер ОСГОП *
                         <a href="https://trk.ppdu.ru/click/4BzCl8OO?erid=2SDnjdcvCRG"
                            target="_blank"
@@ -25,7 +25,7 @@
                 </div>
 
                 <div>
-                    <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
                         Страховая компания *
                     </label>
                     <input type="text" name="company_name" id="company_name"
