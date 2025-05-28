@@ -50,7 +50,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label for="fgis_number" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                    <label for="fgis_number" class="block text-sm font-medium text-gray-700 mb-3 flex items-center">
                         ФГИС лицензия *
                         <span onclick="toggleHint('fgis-hint')"
                               class="ml-2 w-5 h-5 flex items-center justify-center bg-gray-300 text-white rounded-full text-xs font-bold cursor-pointer"
@@ -67,7 +67,7 @@
                 </div>
 
                 <div>
-                    <label for="fgis_date" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                    <label for="fgis_date" class="block text-sm font-medium text-gray-700 mb-3 flex items-center">
                         Дата выдачи ФГИС *
                         <span onclick="toggleHint('fgis-date-hint')"
                               class="ml-2 w-5 h-5 flex items-center justify-center bg-gray-300 text-white rounded-full text-xs font-bold cursor-pointer"
