@@ -33,10 +33,10 @@
             </div>
 
             <div class="mb-4">
-                <label for="inn" class="block text-sm font-medium text-gray-700 mb-1">ИНН (10 цифр) *</label>
+                <label for="inn" class="block text-sm font-medium text-gray-700 mb-1">ИНН (12 цифр) *</label>
                 <input type="text" name="inn" id="inn"
                        class="form-input border rounded p-2 w-full"
-                       placeholder="ИНН (10 цифр)" required maxlength="10">
+                       placeholder="ИНН (12 цифр)" required maxlength="12">
             </div>
 
             <p id="step1-error" class="text-red-600 text-sm hidden mb-2"></p>
