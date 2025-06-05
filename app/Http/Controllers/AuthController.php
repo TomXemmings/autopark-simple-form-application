@@ -129,7 +129,7 @@ class AuthController extends Controller
             'last_name'   => 'required|string|max:255',
             'first_name'  => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
-            'inn'         => ['required', 'digits:10'],
+            'inn'         => ['required', 'digits:12'],
         ]);
 
         $user = auth()->user();
