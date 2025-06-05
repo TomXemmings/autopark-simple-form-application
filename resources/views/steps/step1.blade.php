@@ -54,7 +54,7 @@
     <script>
         $(document).ready(function () {
             $('#inn').on('input', function () {
-                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+                this.value = this.value.replace(/\D/g, '').slice(0, 12);
             });
 
             $('#step1-form').on('submit', function (e) {
@@ -64,8 +64,8 @@
                 const first = $('#first_name').val().trim();
                 const inn = $('#inn').val().trim();
 
-                if (!last || !first || inn.length !== 10) {
-                    $('#step1-error').text('Проверьте, что все обязательные поля заполнены и ИНН состоит из 10 цифр.')
+                if (!last || !first || inn.length !== 12) {
+                    $('#step1-error').text('Проверьте, что все обязательные поля заполнены и ИНН состоит из 12 цифр.')
                         .removeClass('hidden');
                     return;
                 }
