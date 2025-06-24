@@ -33,10 +33,10 @@
             </div>
 
             <div class="mb-4">
-                <label for="inn" class="block text-sm font-medium text-gray-700 mb-1">ИНН (10 цифр) *</label>
+                <label for="inn" class="block text-sm font-medium text-gray-700 mb-1">ИНН (12 цифр) *</label>
                 <input type="text" name="inn" id="inn"
                        class="form-input border rounded p-2 w-full"
-                       placeholder="ИНН (10 цифр)" required maxlength="10">
+                       placeholder="ИНН (12 цифр)" required maxlength="12">
             </div>
 
             <div class="mb-4">
@@ -75,7 +75,7 @@
     <script>
         $(document).ready(function () {
             $('#inn').on('input', function () {
-                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+                this.value = this.value.replace(/\D/g, '').slice(0, 12);
             });
 
             $('#step1-form').on('submit', function (e) {
@@ -85,8 +85,8 @@
                 const first = $('#first_name').val().trim();
                 const inn = $('#inn').val().trim();
 
-                if (!last || !first || inn.length !== 10) {
-                    $('#step1-error').text('Проверьте, что все обязательные поля заполнены и ИНН состоит из 10 цифр.')
+                if (!last || !first || inn.length !== 12) {
+                    $('#step1-error').text('Проверьте, что все обязательные поля заполнены и ИНН состоит из 12 цифр.')
                         .removeClass('hidden');
                     return;
                 }

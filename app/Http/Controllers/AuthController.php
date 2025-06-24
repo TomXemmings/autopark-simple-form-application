@@ -126,13 +126,10 @@ class AuthController extends Controller
     public function stepOne(Request $request)
     {
         $request->validate([
-            'last_name'                 => 'required|string|max:255',
-            'first_name'                => 'required|string|max:255',
-            'middle_name'               => 'nullable|string|max:255',
-            'inn'                       => ['required', 'digits:10'],
-            'driver_license_number'     => 'required',
-            'driver_license_start_date' => 'required',
-            'driver_license_end_date'   => 'required',
+            'last_name'   => 'required|string|max:255',
+            'first_name'  => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'inn'         => ['required', 'digits:10'],
         ]);
 
         $user = auth()->user();
@@ -142,14 +139,11 @@ class AuthController extends Controller
         }
 
         $user->update([
-            'last_name'                 => $request->last_name,
-            'first_name'                => $request->first_name,
-            'middle_name'               => $request->middle_name,
-            'inn'                       => $request->inn,
-            'driver_license_number'     => $request->driver_license_number,
-            'driver_license_start_date' => $request->driver_license_start_date,
-            'driver_license_end_date'   => $request->driver_license_end_date,
-            'current_step'              => 2,
+            'last_name'    => $request->last_name,
+            'first_name'   => $request->first_name,
+            'middle_name'  => $request->middle_name,
+            'inn'          => $request->inn,
+            'current_step' => 2,
         ]);
 
         return response()->json([
@@ -170,6 +164,7 @@ class AuthController extends Controller
         $request->validate([
             'city'    => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'email'   => 'required|email|max:255',
         ]);
 
         $user = auth()->user();
@@ -181,6 +176,7 @@ class AuthController extends Controller
         $user->addressInfo()->updateOrCreate([], [
             'city'    => $request->city,
             'address' => $request->address,
+            'email'   => $request->email,
         ]);
 
         $user->update(['current_step' => 3]);
@@ -200,14 +196,12 @@ class AuthController extends Controller
     public function stepThree(Request $request)
     {
         $request->validate([
-            'policy_number'              => 'required|string|max:255',
-            'start_date'                 => 'required|date',
-            'end_date'                   => 'required|date|after_or_equal:start_date',
-            'company_name'               => 'required|string|max:255',
-            'fgis_number'                => 'required|string|max:255',
-            'fgis_date'                  => 'required|date',
-            'yandex_contract_number'     => 'required|string',
-            'yandex_contract_start_date' => 'required|date',
+            'policy_number' => 'required|string|max:255',
+            'start_date'    => 'required|date',
+            'end_date'      => 'required|date|after_or_equal:start_date',
+            'company_name'  => 'required|string|max:255',
+            'fgis_number'   => 'required|string|max:255',
+            'fgis_date'     => 'required|date',
         ]);
 
         $user = auth()->user();
@@ -225,11 +219,7 @@ class AuthController extends Controller
             'fgis_date'     => $request->fgis_date,
         ]);
 
-        $user->update([
-            'service_agreement_number'     => $request->yandex_contract_number,
-            'service_agreement_start_date' => $request->yandex_contract_start_date,
-            'current_step' => 4
-        ]);
+        $user->update(['current_step' => 4]);
 
         return response()->json([
             'message' => 'Данные страховки сохранены',
@@ -252,19 +242,9 @@ class AuthController extends Controller
             'court_certificate'     => 'required|file|mimes:jpg,jpeg,png,pdf',
             'passport_main'         => 'required|file|mimes:jpg,jpeg,png,pdf',
             'passport_registration' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'yandex_contract'       => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'signature'            => ['required','string'],
         ]);
 
         $user = auth()->user();
-
-        $base64 = preg_replace('#^data:image/\w+;base64,#i', '', $request->signature);
-        $base64 = str_replace(' ', '+', $base64);
-        $binary = base64_decode($base64, true);
-
-        $sigName = 'signature_' . $user->id . '_' . time() . '.png';
-        $sigPath = 'documents/' . $sigName;                   // тот же каталог, что и для файлов
-        Storage::disk('public')->put($sigPath, $binary);
 
         if (!$user) {
             return response()->json(['message' => 'Пользователь не найден'], 404);
@@ -276,8 +256,7 @@ class AuthController extends Controller
             'insurance_photo',
             'court_certificate',
             'passport_main',
-            'passport_registration',
-            'yandex_contract',
+            'passport_registration'
         ];
 
         foreach ($documents as $docType) {
@@ -290,10 +269,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->update([
-            'signature'    => Storage::url($sigPath),
-            'current_step' => 5,
-        ]);
+        $user->update(['current_step' => 5]);
 
         return redirect()->route('user.complete.success');
     }
