@@ -240,7 +240,7 @@ class AdminController extends Controller
     public function exportSingleCsv(User $user): StreamedResponse
     {
         $headers = [
-            'Content-Type'        => 'text/csv',
+            'Content-Type'        => 'text/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="user_' . $user->id . '_export.csv"',
         ];
 
@@ -253,8 +253,9 @@ class AdminController extends Controller
         $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
         $columns = [
-            'LicenseNumber'                => $user->user_code ?? '',
-            'LicenseStartDate'             => optional($user->created_at)->format('d.m.Y') ?? '',
+            'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-'.$user->user_code ?? '',
+            'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
+            'Citizenship'                  => 'РФ',
             'OrgForm'                      => '',
             'FullName'                     => '',
             'ShortName'                    => '',
@@ -267,15 +268,15 @@ class AdminController extends Controller
             'Address'                      => $addressInfo->address ?? '',
             'TelephoneNumber'              => $user->phone ?? '',
             'Email'                        => $addressInfo->email ?? '',
-            'AdditionalRequirement'        => 'Дополнительное требование',
-            'ServiceMark'                  => 'НЕТ',
-            'CommercialDesignation'        => 'НЕТ',
+            'AdditionalRequirement'        => '',
+            'ServiceMark'                  => '',
+            'CommercialDesignation'        => '',
             'WithoutInvolvement'           => '',
             'MedicalExaminationAddress'    => '',
             'LicenseStatus'                => 1,
-            'LicenseDecision'              => '+',
-            'LicenseDecisionDate'          => optional($user->created_at)->format('d.m.Y') ?? '',
-            'LicenseEndDate'               => optional($user->created_at)->addYears(5)->format('d.m.Y') ?? '',
+            'LicenseDecision'              => 'Приказ',
+            'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y') ?? '',
+            'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y') ?? '',
             'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
             'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
             'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
@@ -284,20 +285,42 @@ class AdminController extends Controller
             'ContractOfCarriageStartDate'  => '',
             'ContractOfCarriageEndDate'    => '',
             'OrderAgreementOgrn'           => '5157746192731',
-            'DriverLicenseSeriesAndNumber' => $insuranceInfo->fgis_number ?? '',
-            'DriverLicenseStartDate'       => $fgisDate ? $fgisDate->format('d.m.Y') : '',
-            'DriverLicenseEndDate'         => $fgisDate ? $fgisDate->copy()->addYears(5)->format('d.m.Y') : '',
+            'DriverLicenseSeriesAndNumber' => $user->driver_license_number ?? '',
+            'DriverLicenseStartDate'       => $user->driver_license_start_date ? $user->driver_license_start_date : '',
+            'DriverLicenseEndDate'         => $user->driver_license_end_date ? $user->driver_license_end_date : '',
             'ServiceAgreementNumber'       => $user->service_agreement_number ?? '',
             'ServiceAgreementStartDate'    => $serviceDate ? $serviceDate->format('d.m.Y') : '',
             'ServiceAgreementEndDate'      => $serviceDate ? $serviceDate->copy()->addYears(5)->format('d.m.Y') : '',
         ];
 
         return response()->streamDownload(function () use ($columns) {
-            $output = fopen('php://output', 'w');
-            fputcsv($output, array_keys($columns), ';');
-            fputcsv($output, array_values($columns), ';');
-            fclose($output);
-        }, "user_export_{$user->id}.csv", $headers);
+
+            $out = fopen('php://output', 'w');
+
+            /* 1. UTF-8 BOM — Excel/LibreOffice сразу распознают кодировку */
+            fwrite($out, "\xEF\xBB\xBF");
+
+            /* 2. Заголовок CSV */
+            fputcsv($out, array_keys($columns), ';');
+
+            /* 3. Конвертируем каждую ячейку в UTF-8 на случай «левых» строк */
+            $values = array_map(
+                fn ($v) => is_string($v)
+                    ? mb_convert_encoding(
+                        $v,
+                        'UTF-8',
+                        mb_detect_encoding($v, 'UTF-8, Windows-1251, ISO-8859-1', true) ?: 'UTF-8'
+                    )
+                    : $v,
+                array_values($columns)
+            );
+
+            /* 4. Записываем строку данных */
+            fputcsv($out, $values, ';');
+
+            fclose($out);
+
+        }, null, $headers);
     }
 
 
@@ -317,6 +340,8 @@ class AdminController extends Controller
         $path = storage_path("app/{$filename}");
         $handle = fopen($path, 'w');
 
+        fwrite($handle, "\xEF\xBB\xBF");
+
         $headerWritten = false;
 
         foreach ($request->user_ids as $id) {
@@ -332,8 +357,9 @@ class AdminController extends Controller
             $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
             $columns = [
-                'LicenseNumber'                => $user->user_code ?? '',
-                'LicenseStartDate'             => optional($user->created_at)->format('d.m.Y') ?? '',
+                'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-'.$user->user_code ?? '',
+                'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
+                'Citizenship'                  => 'РФ',
                 'OrgForm'                      => '',
                 'FullName'                     => '',
                 'ShortName'                    => '',
@@ -346,15 +372,15 @@ class AdminController extends Controller
                 'Address'                      => $addressInfo->address ?? '',
                 'TelephoneNumber'              => $user->phone ?? '',
                 'Email'                        => $addressInfo->email ?? '',
-                'AdditionalRequirement'        => 'Дополнительное требование',
-                'ServiceMark'                  => 'НЕТ',
-                'CommercialDesignation'        => 'НЕТ',
+                'AdditionalRequirement'        => '',
+                'ServiceMark'                  => '',
+                'CommercialDesignation'        => '',
                 'WithoutInvolvement'           => '',
                 'MedicalExaminationAddress'    => '',
                 'LicenseStatus'                => 1,
-                'LicenseDecision'              => '+',
-                'LicenseDecisionDate'          => optional($user->created_at)->format('d.m.Y') ?? '',
-                'LicenseEndDate'               => optional($user->created_at)->addYears(5)->format('d.m.Y') ?? '',
+                'LicenseDecision'              => 'Приказ',
+                'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y') ?? '',
+                'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y') ?? '',
                 'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
                 'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
                 'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
@@ -362,10 +388,10 @@ class AdminController extends Controller
                 'ContractOfCarriageNumber'     => '',
                 'ContractOfCarriageStartDate'  => '',
                 'ContractOfCarriageEndDate'    => '',
-                'OrderAgreementOgrn'           => 5157746192731,
-                'DriverLicenseSeriesAndNumber' => $insuranceInfo->fgis_number ?? '',
-                'DriverLicenseStartDate'       => $fgisDate ? $fgisDate->format('d.m.Y') : '',
-                'DriverLicenseEndDate'         => $fgisDate ? $fgisDate->copy()->addYears(5)->format('d.m.Y') : '',
+                'OrderAgreementOgrn'           => '5157746192731',
+                'DriverLicenseSeriesAndNumber' => $user->driver_license_number ?? '',
+                'DriverLicenseStartDate'       => $user->driver_license_start_date ? $user->driver_license_start_date : '',
+                'DriverLicenseEndDate'         => $user->driver_license_end_date ? $user->driver_license_end_date : '',
                 'ServiceAgreementNumber'       => $user->service_agreement_number ?? '',
                 'ServiceAgreementStartDate'    => $serviceDate ? $serviceDate->format('d.m.Y') : '',
                 'ServiceAgreementEndDate'      => $serviceDate ? $serviceDate->copy()->addYears(5)->format('d.m.Y') : '',
@@ -385,7 +411,9 @@ class AdminController extends Controller
             file_put_contents($path, implode(';', array_keys($columns)).PHP_EOL);
         }
 
-        return response()->download($path)->deleteFileAfterSend(true);
+        return response()
+            ->download($path, $filename, ['Content-Type' => 'text/csv; charset=UTF-8'])
+            ->deleteFileAfterSend(true);
     }
 
 
