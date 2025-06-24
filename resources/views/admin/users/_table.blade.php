@@ -6,6 +6,7 @@
         <th class="p-3">Телефон</th>
         <th class="p-3">ФИО</th>
         <th class="p-3">ИНН</th>
+        <th class="p-3">Статус</th>
         <th class="p-3">Действия</th>
     </tr>
     </thead>
@@ -17,6 +18,32 @@
             <td class="p-3">{{ $user->phone }}</td>
             <td class="p-3">{{ $user->last_name }} {{ $user->first_name }} {{ $user->middle_name }}</td>
             <td class="p-3">{{ $user->inn }}</td>
+            <td class="p-3">
+                @switch($user->current_step)
+                    @case(1)
+                        <span class="text-gray-500">Не начал регистрацию</span>
+                        @break
+
+                    @case(2)
+                        <span class="text-blue-600">Шаг 2 — анкета</span>
+                        @break
+
+                    @case(3)
+                        <span class="text-indigo-600">Шаг 3 — проверка документов</span>
+                        @break
+
+                    @case(4)
+                        <span class="text-green-600">Шаг 4 — загрузка документов</span>
+                        @break
+
+                    @case(5)
+                        <span class="text-emerald-600 font-semibold">Регистрация завершена</span>
+                        @break
+
+                    @default
+                        <span class="text-red-600">Неизвестный статус</span>
+                @endswitch
+            </td>
             <td class="p-3 relative text-left">
                 <button onclick="toggleDropdown(this)" type="button"
                         class="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded hover:bg-gray-300">

@@ -6,7 +6,7 @@
     <div class="max-w-2xl mx-auto bg-white p-8 rounded shadow">
         <h2 class="text-xl font-bold mb-6">Шаг 4: Загрузите документы</h2>
 
-        <form method="POST" action="{{ url('/step-4') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ url('/step-4') }}" enctype="multipart/form-data" id="upload-form">
             @csrf
 
             <div class="grid grid-cols-1 gap-4 mb-4">
@@ -49,12 +49,42 @@
                            class="form-input border rounded p-2 w-full" required>
                 </div>
 
+                <div>
+                    <label for="yandex_contract" class="block text-sm font-medium text-gray-700 mb-1">
+                        Договор с Яндекс *
+                    </label>
+                    <input type="file" name="yandex_contract" accept=".jpg,.jpeg,.png,.pdf"
+                           class="form-input border rounded p-2 w-full" required>
+                </div>
+
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">
+                        Подпись <span class="text-xs text-gray-500">(нарисуйте пальцем или мышью)</span> *
+                    </label>
+
+                    {{-- холст для рисования --}}
+                    <canvas id="signature-pad"
+                            class="border border-gray-300 rounded w-full h-40 touch-none"></canvas>
+
+                    {{-- кнопка очистки холста --}}
+                    <button type="button"
+                            id="clear-signature"
+                            class="mt-2 inline-block bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm px-3 py-1 rounded">
+                        Очистить подпись
+                    </button>
+
+                    {{-- скрытый input, сюда JS запишет base64 перед отправкой --}}
+                    <input type="hidden" name="signature" id="signature-input" required>
+                </div>
+
                 <button type="submit"
                         class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     Загрузить все документы
                 </button>
             </div>
         </form>
+
 
         <hr class="my-6">
 
@@ -82,18 +112,36 @@
 @endsection
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.6/dist/signature_pad.umd.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        $('#upload-form').on('submit', function (e) {
-            const fileInput = $('#file')[0];
-            const type = $('#type').val();
+        const canvas   = document.getElementById('signature-pad');
+        // подгоняем размер под плотность пикселей, чтобы подпись была чёткой
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width  = canvas.offsetWidth  * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext('2d').scale(ratio, ratio);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-            if (!type || !fileInput.files.length) {
+        const signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgba(0,0,0,0)',       // прозрачный фон
+            penColor: 'rgb(14, 165, 233)'           // голубой (tailwind sky-500)
+        });
+
+        // ---------- очистка подписи ----------
+        $('#clear-signature').on('click', () => signaturePad.clear());
+
+        $('#upload-form').on('submit', function (e) {
+            if (signaturePad.isEmpty()) {
                 e.preventDefault();
-                $('#upload-error').text('Заполните все поля.').removeClass('hidden');
-            } else {
-                $('#upload-error').addClass('hidden');
+                alert('Пожалуйста, подпишитесь, прежде чем продолжить.');
+                return;
             }
+
+            $('#signature-input').val(signaturePad.toDataURL('image/png'));
         });
     </script>
 @endsection

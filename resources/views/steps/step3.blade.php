@@ -83,6 +83,33 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-5 flex items-center">
+                        Номер договора с яндекс *
+                        <span onclick="toggleHint('yandex-contract-hint')"
+                              class="ml-2 w-5 h-5 flex items-center justify-center bg-gray-300 text-white rounded-full text-xs font-bold cursor-pointer"
+                              title="Показать подсказку">
+                            ?
+                        </span>
+                    </label>
+                    <input type="text" name="yandex_contract_number" id="yandex_contract_number"
+                           class="form-input border rounded p-2 w-full"
+                           placeholder="Номер договора с яндекс" required>
+                    <div id="yandex-contract-hint" class="hidden mt-2">
+                        Договор можно скачать в приложении яндекс про в разделе профиль - раздел документы
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-5 flex items-center">
+                        Дата начала договора с Яндекс *
+                    </label>
+                    <input type="date" name="yandex_contract_start_date" id="yandex_contract_start_date"
+                           class="form-input border rounded p-2 w-full" required>
+                </div>
+            </div>
+
             <p id="step3-error" class="text-red-600 text-sm hidden mb-2"></p>
 
             <button type="submit"
@@ -106,6 +133,8 @@
                 const end = $('#end_date').val();
                 const fgis = $('#fgis_number').val().trim();
                 const fgisDate = $('#fgis_date').val();
+                const yandex_contract_start_date = $('#yandex_contract_start_date').val();
+                const yandex_contract_number = $('#yandex_contract_number').val();
 
                 if (!policy || !company || !start || !end || !fgis || !fgisDate) {
                     $('#step3-error').text('Пожалуйста, заполните все поля.').removeClass('hidden');
@@ -121,7 +150,9 @@
                     end_date: end,
                     company_name: company,
                     fgis_number: fgis,
-                    fgis_date: fgisDate
+                    fgis_date: fgisDate,
+                    yandex_contract_start_date: yandex_contract_start_date,
+                    yandex_contract_number: yandex_contract_number
                 })
                     .done(() => window.location.href = '/step-4')
                     .fail(xhr => {

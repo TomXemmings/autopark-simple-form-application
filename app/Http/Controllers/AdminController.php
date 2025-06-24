@@ -133,9 +133,13 @@ class AdminController extends Controller
             'middle_name' => 'nullable|string|max:255',
             'inn'         => 'required|digits:10',
 
+            'driver_license_number'     => '',
+            'driver_license_start_date' => '',
+            'driver_license_end_date'   => '',
+
             'city'    => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'email'   => 'required|email|max:255',
+            'email'   => 'email|max:255',
 
             'policy_number' => 'required|string|max:255',
             'start_date'    => 'required|date',
@@ -148,6 +152,8 @@ class AdminController extends Controller
             'service_agreement_start_date'  => 'nullable|date',
         ]);
 
+        dd($request->driver_license_number);
+
         $user->update([
             'last_name'                    => $validated['last_name'],
             'first_name'                   => $validated['first_name'],
@@ -155,13 +161,16 @@ class AdminController extends Controller
             'inn'                          => $validated['inn'],
             'service_agreement_number'     => $request->service_agreement_number,
             'service_agreement_start_date' => $request->service_agreement_start_date,
+            'driver_license_number'        => $request->driver_license_number,
+            'driver_license_start_date'    => $request->driver_license_start_date,
+            'driver_license_end_date'      => $request->driver_license_end_date,
         ]);
 
 
         $user->addressInfo()->updateOrCreate([], [
             'city'    => $request->city,
             'address' => $request->address,
-            'email'   => $request->email,
+            'email'   => $request->email ?? null,
         ]);
 
         $user->insuranceInfo()->updateOrCreate([], [

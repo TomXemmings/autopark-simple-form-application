@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Шаг 2 — Адрес и Email')
+@section('title', 'Шаг 2 — Адрес')
 
 @section('content')
     <div class="max-w-xl mx-auto bg-white p-8 rounded shadow">
-        <h2 class="text-xl font-bold mb-6">Шаг 2: Адрес проживания и Email</h2>
+        <h2 class="text-xl font-bold mb-6">Шаг 2: Адрес проживания</h2>
 
         <form id="step2-form" method="POST" action="{{ url('/step-2') }}">
             @csrf
@@ -25,12 +25,12 @@
                 </div>
             </div>
 
-            <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                <input type="email" name="email" id="email"
-                       class="form-input border rounded p-2 w-full"
-                       placeholder="Email" required>
-            </div>
+{{--            <div class="mb-4">--}}
+{{--                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>--}}
+{{--                <input type="email" name="email" id="email"--}}
+{{--                       class="form-input border rounded p-2 w-full"--}}
+{{--                       placeholder="Email" required>--}}
+{{--            </div>--}}
 
             <p id="step2-error" class="text-red-600 text-sm hidden mb-2"></p>
 
@@ -51,10 +51,8 @@
 
                 const city = $('#city').val().trim();
                 const address = $('#address').val().trim();
-                const email = $('#email').val().trim();
-                const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-                if (!city || !address || !isValidEmail) {
+                if (!city || !address) {
                     $('#step2-error').text('Заполните все поля и проверьте корректность Email.').removeClass('hidden');
                     return;
                 }
@@ -65,7 +63,6 @@
                     _token: '{{ csrf_token() }}',
                     city: city,
                     address: address,
-                    email: email
                 })
                     .done(function () {
                         window.location.href = '/step-3';

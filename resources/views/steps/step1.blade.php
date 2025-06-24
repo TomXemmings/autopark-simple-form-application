@@ -39,6 +39,27 @@
                        placeholder="ИНН (10 цифр)" required maxlength="10">
             </div>
 
+            <div class="mb-4">
+                <label for="driver_license_number" class="block text-sm font-medium text-gray-700 mb-1">Серия номера прав *</label>
+                <input type="text" name="driver_license_number" id="driver_license_number"
+                       class="form-input border rounded p-2 w-full"
+                       placeholder="Серия номера прав" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="driver_license_start_date" class="block text-sm font-medium text-gray-700 mb-1">Дата выдачи прав *</label>
+                <input type="date" name="driver_license_start_date" id="driver_license_start_date"
+                       class="form-input border rounded p-2 w-full"
+                       placeholder="Дата выдачи прав" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="driver_license_end_date" class="block text-sm font-medium text-gray-700 mb-1">Дата окончания прав *</label>
+                <input type="date" name="driver_license_end_date" id="driver_license_end_date"
+                       class="form-input border rounded p-2 w-full"
+                       placeholder="Дата окончания прав" required>
+            </div>
+
             <p id="step1-error" class="text-red-600 text-sm hidden mb-2"></p>
 
             <button type="submit"
@@ -77,7 +98,10 @@
                     last_name: last,
                     first_name: first,
                     middle_name: $('#middle_name').val(),
-                    inn: inn
+                    inn: inn,
+                    driver_license_number: $('#driver_license_number').val(),
+                    driver_license_start_date: $('#driver_license_start_date').val(),
+                    driver_license_end_date: $('#driver_license_end_date').val(),
                 })
                     .done(function () {
                         window.location.href = '/step-2';

@@ -31,6 +31,13 @@ class User extends Authenticatable
         'service_agreement_number',
         'service_agreement_start_date',
         'service_agreement_end_date',
+        'driver_license_number',
+        'driver_license_start_date',
+        'driver_license_end_date',
+        'yandex_contract_number',
+        'yandex_contract_start_date',
+        'yandex_contract_end_date',
+        'signature'
     ];
 
     /**

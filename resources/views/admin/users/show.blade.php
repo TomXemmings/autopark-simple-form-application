@@ -25,11 +25,19 @@
         </div>
 
         <div>
-            <h2 class="text-lg font-semibold mb-2">Адрес и Email</h2>
+            <h2 class="text-lg font-semibold mb-2">Серия, дата выдачи и окончания водительских прав</h2>
+            <div class="grid grid-cols-4 gap-4">
+                <input type="text" name="driver_license_number" value="{{ $user->driver_license_number ?? '' }}" class="form-input border rounded p-2" placeholder="Серия прав">
+                <input type="date" name="driver_license_start_date" value="{{ $user->driver_license_start_date ?? '' }}" class="form-input border rounded p-2" placeholder="Дата выдачи">
+                <input type="date" name="driver_license_end_date" value="{{ $user->driver_license_end_date ?? '' }}" class="form-input border rounded p-2" placeholder="Дата окончания">
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-semibold mb-2">Адрес</h2>
             <div class="grid grid-cols-3 gap-4">
                 <input type="text" name="city" value="{{ $user->addressInfo->city ?? '' }}" class="form-input border rounded p-2" placeholder="Город">
                 <input type="text" name="address" value="{{ $user->addressInfo->address ?? '' }}" class="form-input border rounded p-2" placeholder="Адрес">
-                <input type="email" name="email" value="{{ $user->addressInfo->email ?? '' }}" class="form-input border rounded p-2" placeholder="Email">
             </div>
         </div>
 
@@ -62,6 +70,15 @@
 
         <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Сохранить</button>
     </form>
+
+    <hr class="my-8">
+
+
+    <h2 class="text-lg font-semibold mb-4">Подпись</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+        <img src="{{ asset($user->signature) }}" class="rounded shadow mx-auto max-h-40 object-contain">
+    </div>
 
     <hr class="my-8">
 
