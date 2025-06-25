@@ -164,7 +164,6 @@ class AuthController extends Controller
         $request->validate([
             'city'    => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'email'   => 'required|email|max:255',
         ]);
 
         $user = auth()->user();
@@ -176,7 +175,6 @@ class AuthController extends Controller
         $user->addressInfo()->updateOrCreate([], [
             'city'    => $request->city,
             'address' => $request->address,
-            'email'   => $request->email,
         ]);
 
         $user->update(['current_step' => 3]);

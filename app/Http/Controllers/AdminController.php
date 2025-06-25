@@ -170,7 +170,6 @@ class AdminController extends Controller
         $user->addressInfo()->updateOrCreate([], [
             'city'    => $request->city,
             'address' => $request->address,
-            'email'   => $request->email ?? null,
         ]);
 
         $user->insuranceInfo()->updateOrCreate([], [
