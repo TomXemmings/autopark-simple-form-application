@@ -100,7 +100,7 @@
                 const yandex_contract_start_date = $('#yandex_contract_start_date').val();
                 const yandex_contract_number = $('#yandex_contract_number').val();
 
-                if (!policy || !company || !start || !end || !fgis || !fgisDate) {
+                if (!policy || !company || !start || !end) {
                     $('#step3-error').text('Пожалуйста, заполните все поля.').removeClass('hidden');
                     return;
                 }
