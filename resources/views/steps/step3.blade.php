@@ -97,8 +97,6 @@
                 const company = $('#company_name').val().trim();
                 const start = $('#start_date').val();
                 const end = $('#end_date').val();
-                const fgis = $('#fgis_number').val().trim();
-                const fgisDate = $('#fgis_date').val();
                 const yandex_contract_start_date = $('#yandex_contract_start_date').val();
                 const yandex_contract_number = $('#yandex_contract_number').val();
 
@@ -115,8 +113,6 @@
                     start_date: start,
                     end_date: end,
                     company_name: company,
-                    fgis_number: fgis,
-                    fgis_date: fgisDate,
                     yandex_contract_start_date: yandex_contract_start_date,
                     yandex_contract_number: yandex_contract_number
                 })
