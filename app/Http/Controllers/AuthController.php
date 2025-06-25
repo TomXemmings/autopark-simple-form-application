@@ -198,8 +198,6 @@ class AuthController extends Controller
             'start_date'    => 'required|date',
             'end_date'      => 'required|date|after_or_equal:start_date',
             'company_name'  => 'required|string|max:255',
-            'fgis_number'   => 'required|string|max:255',
-            'fgis_date'     => 'required|date',
         ]);
 
         $user = auth()->user();
@@ -213,8 +211,6 @@ class AuthController extends Controller
             'start_date'    => $request->start_date,
             'end_date'      => $request->end_date,
             'company_name'  => $request->company_name,
-            'fgis_number'   => $request->fgis_number,
-            'fgis_date'     => $request->fgis_date,
         ]);
 
         $user->update(['current_step' => 4]);

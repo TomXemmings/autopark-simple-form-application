@@ -36,52 +36,18 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Дата начала *</label>
+                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Дата начала ОСГОП *</label>
                     <input type="date" name="start_date" id="start_date"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
 
                 <div>
-                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">Дата окончания *</label>
+                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">Дата окончания ОСГОП *</label>
                     <input type="date" name="end_date" id="end_date"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-5 flex items-center">
-                        ФГИС лицензия *
-                        <span onclick="toggleHint('fgis-hint')"
-                              class="ml-2 w-5 h-5 flex items-center justify-center bg-gray-300 text-white rounded-full text-xs font-bold cursor-pointer"
-                              title="Показать подсказку">
-                            ?
-                        </span>
-                    </label>
-                    <input type="text" name="fgis_number" id="fgis_number"
-                           class="form-input border rounded p-2 w-full"
-                           placeholder="ФГИС лицензия" required>
-                    <div id="fgis-hint" class="hidden mt-2">
-                        <img src="{{ asset('images/image-1.jpg') }}" alt="ФГИС пример" class="rounded border">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-5 flex items-center">
-                        Дата выдачи ФГИС *
-                        <span onclick="toggleHint('fgis-date-hint')"
-                              class="ml-2 w-5 h-5 flex items-center justify-center bg-gray-300 text-white rounded-full text-xs font-bold cursor-pointer"
-                              title="Показать подсказку">
-                            ?
-                        </span>
-                    </label>
-                    <input type="date" name="fgis_date" id="fgis_date"
-                           class="form-input border rounded p-2 w-full" required>
-                    <div id="fgis-date-hint" class="hidden mt-2">
-                        <img src="{{ asset('images/image-2.jpg') }}" alt="Дата ФГИС пример" class="rounded border">
-                    </div>
-                </div>
-            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>

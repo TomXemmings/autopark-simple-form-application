@@ -13,31 +13,31 @@
 
                 <div>
                     <label for="passport_main" class="block text-sm font-medium text-gray-700 mb-1">Паспорт (основная страница) *</label>
-                    <input type="file" name="passport_main" accept=".jpg,.jpeg,.png"
+                    <input type="file" name="passport_main" accept=".jpg,.jpeg,.png,.pdf"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
 
                 <div>
                     <label for="passport_registration" class="block text-sm font-medium text-gray-700 mb-1">Паспорт (прописка) *</label>
-                    <input type="file" name="passport_registration" accept=".jpg,.jpeg,.png"
+                    <input type="file" name="passport_registration" accept=".jpg,.jpeg,.png,.pdf"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
 
                 <div>
                     <label for="license_front" class="block text-sm font-medium text-gray-700 mb-1">Вод. удостоверение (лицевая) *</label>
-                    <input type="file" name="license_front" accept=".jpg,.jpeg,.png"
+                    <input type="file" name="license_front" accept=".jpg,.jpeg,.png,.pdf"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
 
                 <div>
                     <label for="license_back" class="block text-sm font-medium text-gray-700 mb-1">Вод. удостоверение (обратная) *</label>
-                    <input type="file" name="license_back" accept=".jpg,.jpeg,.png"
+                    <input type="file" name="license_back" accept=".jpg,.jpeg,.png,.pdf"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
 
                 <div>
-                    <label for="insurance_photo" class="block text-sm font-medium text-gray-700 mb-1">Фото страхового полиса *</label>
-                    <input type="file" name="insurance_photo" accept=".jpg,.jpeg,.png"
+                    <label for="insurance_photo" class="block text-sm font-medium text-gray-700 mb-1">Страховой полис ОСГОП *</label>
+                    <input type="file" name="insurance_photo" accept=".jpg,.jpeg,.png,.pdf"
                            class="form-input border rounded p-2 w-full" required>
                 </div>
 
@@ -60,7 +60,7 @@
 
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-gray-700">
-                        Подпись <span class="text-xs text-gray-500">(нарисуйте пальцем или мышью)</span> *
+                        Подпись как в паспорте <span class="text-xs text-gray-500">(нарисуйте пальцем или мышью)</span> *
                     </label>
 
                     {{-- холст для рисования --}}
