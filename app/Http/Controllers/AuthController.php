@@ -253,6 +253,14 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
+        $base64 = preg_replace('#^data:image/\w+;base64,#i', '', $request->signature);
+        $base64 = str_replace(' ', '+', $base64);
+        $binary = base64_decode($base64, true);
+
+        $sigName = 'signature_' . $user->id . '_' . time() . '.png';
+        $sigPath = 'documents/' . $sigName;
+        Storage::disk('public')->put($sigPath, $binary);
+
         if (!$user) {
             return response()->json(['message' => 'Пользователь не найден'], 404);
         }
@@ -277,7 +285,10 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->update(['current_step' => 5]);
+        $user->update([
+            'signature'    => Storage::url($sigPath),
+            'current_step' => 5,
+        ]);
 
         return redirect()->route('user.complete.success');
     }
