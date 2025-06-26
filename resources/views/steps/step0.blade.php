@@ -34,11 +34,12 @@
             </button>
         </form>
 
-        <p class="text-gray-600 text-sm mb-6 text-center">
-            Печкин ЯндексПро<br>
-            Гужевая 11, тел. <a href="tel:89200395155">8(920)039-51-55</a>
-        </p>
     </div>
+
+    <p class="text-gray-600 text-sm mb-6 text-center mt-4">
+        Печкин ЯндексПро<br>
+        Гужевая 11, тел. <a href="tel:89200395155">8(920)039-51-55</a>
+    </p>
 @endsection
 
 @section('scripts')
