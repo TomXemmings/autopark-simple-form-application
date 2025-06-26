@@ -48,8 +48,6 @@
                 <input type="date" name="start_date" value="{{ $user->insuranceInfo->start_date ?? '' }}" class="form-input border rounded p-2">
                 <input type="date" name="end_date" value="{{ $user->insuranceInfo->end_date ?? '' }}" class="form-input border rounded p-2">
                 <input type="text" name="company_name" value="{{ $user->insuranceInfo->company_name ?? '' }}" class="form-input border rounded p-2" placeholder="Компания">
-                <input type="text" name="fgis_number" value="{{ $user->insuranceInfo->fgis_number ?? '' }}" class="form-input border rounded p-2" placeholder="ФГИС номер">
-                <input type="date" name="fgis_date" value="{{ $user->insuranceInfo->fgis_date ?? '' }}" class="form-input border rounded p-2">
             </div>
         </div>
 

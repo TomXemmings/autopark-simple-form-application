@@ -43,7 +43,7 @@
                 <label for="driver_license_number" class="block text-sm font-medium text-gray-700 mb-1">Серия и номер в/у *</label>
                 <input type="text" name="driver_license_number" id="driver_license_number"
                        class="form-input border rounded p-2 w-full"
-                       placeholder="Серия и номер в/у" required>
+                       placeholder="Серия и номер в/у (без пробелов)" required>
             </div>
 
             <div class="mb-4">
