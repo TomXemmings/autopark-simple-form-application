@@ -168,7 +168,6 @@ class AuthController extends Controller
     public function stepTwo(Request $request)
     {
         $request->validate([
-            'city'    => 'required|string|max:255',
             'address' => 'required|string|max:255',
         ]);
 
@@ -179,7 +178,6 @@ class AuthController extends Controller
         }
 
         $user->addressInfo()->updateOrCreate([], [
-            'city'    => $request->city,
             'address' => $request->address,
         ]);
 

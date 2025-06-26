@@ -137,7 +137,6 @@ class AdminController extends Controller
             'driver_license_start_date' => '',
             'driver_license_end_date'   => '',
 
-            'city'    => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'email'   => 'email|max:255',
 
@@ -166,7 +165,6 @@ class AdminController extends Controller
 
 
         $user->addressInfo()->updateOrCreate([], [
-            'city'    => $request->city,
             'address' => $request->address,
         ]);
 
@@ -248,7 +246,7 @@ class AdminController extends Controller
         $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
         $columns = [
-            'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-'.$user->user_code ?? '',
+            'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-052-'.$user->user_code ?? '',
             'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
             'Citizenship'                  => 'РФ',
             'OrgForm'                      => '',
@@ -259,9 +257,9 @@ class AdminController extends Controller
             'MiddleName'                   => $user->middle_name ?? '',
             'Ogrn'                         => '',
             'INN'                          => $user->inn ?? '',
-            'LegalAddress'                 => $addressInfo->city ?? '',
+            'LegalAddress'                 => '',
             'Address'                      => $addressInfo->address ?? '',
-            'TelephoneNumber'              => $user->phone ?? '',
+            'TelephoneNumber'              => '+'.$user->phone ?? '',
             'Email'                        => $addressInfo->email ?? '',
             'AdditionalRequirement'        => '',
             'ServiceMark'                  => '',
@@ -352,7 +350,7 @@ class AdminController extends Controller
             $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
             $columns = [
-                'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-'.$user->user_code ?? '',
+                'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-052-'.$user->user_code ?? '',
                 'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
                 'Citizenship'                  => 'РФ',
                 'OrgForm'                      => '',
@@ -363,9 +361,9 @@ class AdminController extends Controller
                 'MiddleName'                   => $user->middle_name ?? '',
                 'Ogrn'                         => '',
                 'INN'                          => $user->inn ?? '',
-                'LegalAddress'                 => $addressInfo->city ?? '',
+                'LegalAddress'                 => '',
                 'Address'                      => $addressInfo->address ?? '',
-                'TelephoneNumber'              => $user->phone ?? '',
+                'TelephoneNumber'              => '+'.$user->phone ?? '',
                 'Email'                        => $addressInfo->email ?? '',
                 'AdditionalRequirement'        => '',
                 'ServiceMark'                  => '',

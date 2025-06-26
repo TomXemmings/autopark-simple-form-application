@@ -10,12 +10,12 @@
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Город *</label>
-                    <input type="text" name="city" id="city"
-                           class="form-input border rounded p-2 w-full"
-                           placeholder="Город" required>
-                </div>
+{{--                <div>--}}
+{{--                    <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Город *</label>--}}
+{{--                    <input type="text" name="city" id="city"--}}
+{{--                           class="form-input border rounded p-2 w-full"--}}
+{{--                           placeholder="Город" required>--}}
+{{--                </div>--}}
 
                 <div>
                     <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Адрес по прописке (как в паспорте) *</label>
@@ -49,7 +49,6 @@
             $('#step2-form').on('submit', function (e) {
                 e.preventDefault();
 
-                const city = $('#city').val().trim();
                 const address = $('#address').val().trim();
 
                 if (!city || !address) {
@@ -61,7 +60,6 @@
 
                 $.post("{{ url('/step-2') }}", {
                     _token: '{{ csrf_token() }}',
-                    city: city,
                     address: address,
                 })
                     .done(function () {

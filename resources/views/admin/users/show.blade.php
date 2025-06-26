@@ -36,13 +36,12 @@
         <div>
             <h2 class="text-lg font-semibold mb-2">Адрес</h2>
             <div class="grid grid-cols-3 gap-4">
-                <input type="text" name="city" value="{{ $user->addressInfo->city ?? '' }}" class="form-input border rounded p-2" placeholder="Город">
                 <input type="text" name="address" value="{{ $user->addressInfo->address ?? '' }}" class="form-input border rounded p-2" placeholder="Адрес">
             </div>
         </div>
 
         <div>
-            <h2 class="text-lg font-semibold mb-2">ОСГОП и ФГИС</h2>
+            <h2 class="text-lg font-semibold mb-2">ОСГОП</h2>
             <div class="grid grid-cols-6 gap-4">
                 <input type="text" name="policy_number" value="{{ $user->insuranceInfo->policy_number ?? '' }}" class="form-input border rounded p-2" placeholder="Номер ОСГОП">
                 <input type="date" name="start_date" value="{{ $user->insuranceInfo->start_date ?? '' }}" class="form-input border rounded p-2">

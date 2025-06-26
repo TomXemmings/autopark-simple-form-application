@@ -85,6 +85,13 @@
             </div>
         </form>
 
+        {{-- …внутри вашего @section('content'), но ПОСЛЕ формы --}}
+        <div id="loading-overlay"
+             class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden">
+            <div class="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            {{-- если хотите текст --}}
+            <span class="ml-4 text-white text-lg">Загрузка…</span>
+        </div>
 
         <hr class="my-6">
 
@@ -114,6 +121,25 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.6/dist/signature_pad.umd.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // …существующий код подписи остаётся
+
+        $('#upload-form').on('submit', function (e) {
+
+            if (signaturePad.isEmpty()) {
+                e.preventDefault();
+                alert('Пожалуйста, подпишитесь, прежде чем продолжить.');
+                return;
+            }
+
+            // пишем подпись
+            $('#signature-input').val(signaturePad.toDataURL('image/png'));
+
+            // --- ПОКАЗЫВАЕМ ИНДИКАТОР ---
+            $('#loading-overlay').removeClass('hidden');
+        });
+    </script>
+
     <script>
         const canvas   = document.getElementById('signature-pad');
         // подгоняем размер под плотность пикселей, чтобы подпись была чёткой
