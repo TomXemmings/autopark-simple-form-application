@@ -9,7 +9,7 @@
         <form id="step2-form" method="POST" action="{{ url('/step-2') }}">
             @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
 {{--                <div>--}}
 {{--                    <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Город *</label>--}}
 {{--                    <input type="text" name="city" id="city"--}}
@@ -51,7 +51,7 @@
 
                 const address = $('#address').val().trim();
 
-                if (!city || !address) {
+                if (!address) {
                     $('#step2-error').text('Заполните все поля и проверьте корректность Email.').removeClass('hidden');
                     return;
                 }
