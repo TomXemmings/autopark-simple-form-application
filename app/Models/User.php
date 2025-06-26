@@ -82,6 +82,6 @@ class User extends Authenticatable
     {
         $lastUser = self::orderBy('id', 'desc')->first();
         $number = $lastUser ? (int) filter_var($lastUser->user_code, FILTER_SANITIZE_NUMBER_INT) + 1 : 1;
-        return str_pad($number, 3, '0', STR_PAD_LEFT) . 'М';
+        return str_pad($number, 3, '0', STR_PAD_LEFT);
     }
 }
