@@ -231,7 +231,7 @@ class AdminController extends Controller
     public function exportSingleCsv(User $user): StreamedResponse
     {
         $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Type'        => 'text/csv; charset=Windows-1251',
             'Content-Disposition' => 'attachment; filename="user_' . $user->id . '_export.csv"',
         ];
 
@@ -244,8 +244,8 @@ class AdminController extends Controller
         $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
         $columns = [
-            'LicenseNumber'                => Carbon::now()->format('dmY').'-052-'.$user->user_code ?? '',
-            'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
+            'LicenseNumber'                => Carbon::now()->format('dmY') . '-052-' . ($user->user_code ?? ''),
+            'LicenseStartDate'             => Carbon::now()->format('d.m.Y'),
             'Citizenship'                  => 'РФ',
             'OrgForm'                      => '',
             'FullName'                     => '',
@@ -257,7 +257,7 @@ class AdminController extends Controller
             'INN'                          => $user->inn ?? '',
             'LegalAddress'                 => '',
             'Address'                      => $addressInfo->address ?? '',
-            'TelephoneNumber'              => $user->phone ? '="+'.$user->phone.'"' : '',
+            'TelephoneNumber'              => $user->phone ? '+' . $user->phone : '',
             'Email'                        => $addressInfo->email ?? '',
             'AdditionalRequirement'        => '',
             'ServiceMark'                  => '',
@@ -266,9 +266,9 @@ class AdminController extends Controller
             'MedicalExaminationAddress'    => '',
             'LicenseStatus'                => 1,
             'LicenseDecision'              => 'Приказ',
-            'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y') ?? '',
-            'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y') ?? '',
-            'InsuranceContractNumber'      => isset($insuranceInfo->policy_number) ? '="' . $insuranceInfo->policy_number . '"' : '',
+            'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y'),
+            'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y'),
+            'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
             'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
             'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
             'InsuranceCompanyName'         => $insuranceInfo->company_name ?? '',
@@ -277,43 +277,35 @@ class AdminController extends Controller
             'ContractOfCarriageEndDate'    => '',
             'OrderAgreementOgrn'           => '5157746192731',
             'DriverLicenseSeriesAndNumber' => $user->driver_license_number ?? '',
-            'DriverLicenseStartDate'       => $user->driver_license_start_date ? $user->driver_license_start_date : '',
-            'DriverLicenseEndDate'         => $user->driver_license_end_date ? $user->driver_license_end_date : '',
+            'DriverLicenseStartDate'       => $user->driver_license_start_date ?? '',
+            'DriverLicenseEndDate'         => $user->driver_license_end_date ?? '',
             'ServiceAgreementNumber'       => $user->service_agreement_number ?? '',
             'ServiceAgreementStartDate'    => $serviceDate ? $serviceDate->format('d.m.Y') : '',
             'ServiceAgreementEndDate'      => $serviceDate ? $serviceDate->copy()->addYears(5)->format('d.m.Y') : '',
         ];
 
         return response()->streamDownload(function () use ($columns) {
-
             $out = fopen('php://output', 'w');
 
-            /* 1. UTF-8 BOM — Excel/LibreOffice сразу распознают кодировку */
-            fwrite($out, "\xEF\xBB\xBF");
+            // 1. Заголовки в Windows-1251
+            $headers = array_map(
+                fn ($h) => iconv('UTF-8', 'Windows-1251//IGNORE//TRANSLIT', $h),
+                array_keys($columns)
+            );
+            fputcsv($out, $headers, ';');
 
-            /* 2. Заголовок CSV */
-            fputcsv($out, array_keys($columns), ';');
-
-            /* 3. Конвертируем каждую ячейку в UTF-8 на случай «левых» строк */
+            // 2. Значения в Windows-1251 + защита от Excel
             $values = array_map(
                 fn ($v) => is_string($v)
-                    ? mb_convert_encoding(
-                        $v,
-                        'UTF-8',
-                        mb_detect_encoding($v, 'UTF-8, Windows-1251, ISO-8859-1', true) ?: 'UTF-8'
-                    )
+                    ? '="' . iconv('UTF-8', 'Windows-1251//IGNORE//TRANSLIT', $v) . '"'
                     : $v,
                 array_values($columns)
             );
-
-            /* 4. Записываем строку данных */
             fputcsv($out, $values, ';');
 
             fclose($out);
-
         }, null, $headers);
     }
-
 
     /**
      * Export selected drivers to csv
@@ -331,6 +323,8 @@ class AdminController extends Controller
         $path = storage_path("app/{$filename}");
         $handle = fopen($path, 'w');
 
+        fwrite($handle, "\xEF\xBB\xBF");
+
         $headerWritten = false;
 
         foreach ($request->user_ids as $id) {
@@ -338,7 +332,7 @@ class AdminController extends Controller
             if (!$user) continue;
 
             $insuranceInfo = optional($user->insuranceInfo);
-            $addressInfo   = optional($user->addressInfo);
+            $addressInfo = optional($user->addressInfo);
 
             $fgisDate       = $insuranceInfo->fgis_date ? Carbon::parse($insuranceInfo->fgis_date) : null;
             $insuranceStart = $insuranceInfo->start_date ? Carbon::parse($insuranceInfo->start_date) : null;
@@ -346,8 +340,8 @@ class AdminController extends Controller
             $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
             $columns = [
-                'LicenseNumber'                => Carbon::now()->format('dmY') . '-052-' . ($user->user_code ?? ''),
-                'LicenseStartDate'             => Carbon::now()->format('d.m.Y'),
+                'LicenseNumber'                => Carbon::now()->format('dmY').'-052-'.$user->user_code ?? '',
+                'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
                 'Citizenship'                  => 'РФ',
                 'OrgForm'                      => '',
                 'FullName'                     => '',
@@ -359,7 +353,7 @@ class AdminController extends Controller
                 'INN'                          => $user->inn ?? '',
                 'LegalAddress'                 => '',
                 'Address'                      => $addressInfo->address ?? '',
-                'TelephoneNumber'              => $user->phone ? '+'.$user->phone : '',
+                'TelephoneNumber'              => $user->phone ? '="+'.$user->phone.'"' : '',
                 'Email'                        => $addressInfo->email ?? '',
                 'AdditionalRequirement'        => '',
                 'ServiceMark'                  => '',
@@ -368,9 +362,9 @@ class AdminController extends Controller
                 'MedicalExaminationAddress'    => '',
                 'LicenseStatus'                => 1,
                 'LicenseDecision'              => 'Приказ',
-                'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y'),
-                'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y'),
-                'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
+                'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y') ?? '',
+                'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y') ?? '',
+                'InsuranceContractNumber'      => isset($insuranceInfo->policy_number) ? '="' . $insuranceInfo->policy_number . '"' : '',
                 'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
                 'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
                 'InsuranceCompanyName'         => $insuranceInfo->company_name ?? '',
@@ -379,44 +373,32 @@ class AdminController extends Controller
                 'ContractOfCarriageEndDate'    => '',
                 'OrderAgreementOgrn'           => '5157746192731',
                 'DriverLicenseSeriesAndNumber' => $user->driver_license_number ?? '',
-                'DriverLicenseStartDate'       => $user->driver_license_start_date ?? '',
-                'DriverLicenseEndDate'         => $user->driver_license_end_date ?? '',
+                'DriverLicenseStartDate'       => $user->driver_license_start_date ? $user->driver_license_start_date : '',
+                'DriverLicenseEndDate'         => $user->driver_license_end_date ? $user->driver_license_end_date : '',
                 'ServiceAgreementNumber'       => $user->service_agreement_number ?? '',
                 'ServiceAgreementStartDate'    => $serviceDate ? $serviceDate->format('d.m.Y') : '',
                 'ServiceAgreementEndDate'      => $serviceDate ? $serviceDate->copy()->addYears(5)->format('d.m.Y') : '',
             ];
 
-            // Конвертация в Windows-1251 и оборачивание значений в ="..."
-            $convertedValues = array_map(
-                fn ($v) => is_string($v)
-                    ? '="' . iconv('UTF-8', 'Windows-1251//IGNORE//TRANSLIT', $v) . '"'
-                    : $v,
-                array_values($columns)
-            );
-
             if (!$headerWritten) {
-                $convertedHeaders = array_map(
-                    fn ($h) => iconv('UTF-8', 'Windows-1251//IGNORE//TRANSLIT', $h),
-                    array_keys($columns)
-                );
-                fputcsv($handle, $convertedHeaders, ';');
+                fputcsv($handle, array_keys($columns), ';');
                 $headerWritten = true;
             }
 
-            fputcsv($handle, $convertedValues, ';');
+            fputcsv($handle, array_values($columns), ';');
         }
 
         fclose($handle);
 
-        // Если файл почему-то пустой — запишем только заголовки
         if (!file_exists($path) || filesize($path) === 0) {
-            file_put_contents($path, implode(';', array_keys($columns)) . PHP_EOL);
+            file_put_contents($path, implode(';', array_keys($columns)).PHP_EOL);
         }
 
         return response()
-            ->download($path, $filename, ['Content-Type' => 'text/csv; charset=Windows-1251'])
+            ->download($path, $filename, ['Content-Type' => 'text/csv; charset=UTF-8'])
             ->deleteFileAfterSend(true);
     }
+
 
     /**
      * Print documents page
