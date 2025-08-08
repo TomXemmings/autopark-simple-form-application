@@ -149,8 +149,6 @@ class AdminController extends Controller
             'service_agreement_start_date'  => 'nullable|date',
         ]);
 
-        dd($request->driver_license_number);
-
         $user->update([
             'last_name'                    => $validated['last_name'],
             'first_name'                   => $validated['first_name'],
