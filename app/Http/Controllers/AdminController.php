@@ -244,7 +244,7 @@ class AdminController extends Controller
         $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
         $columns = [
-            'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-052-'.$user->user_code ?? '',
+            'LicenseNumber'                => Carbon::now()->format('dmY').'-052-'.$user->user_code ?? '',
             'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
             'Citizenship'                  => 'РФ',
             'OrgForm'                      => '',
@@ -268,7 +268,7 @@ class AdminController extends Controller
             'LicenseDecision'              => 'Приказ',
             'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y') ?? '',
             'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y') ?? '',
-            'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
+            'InsuranceContractNumber'      => isset($insuranceInfo->policy_number) ? '="' . $insuranceInfo->policy_number . '"' : '',
             'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
             'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
             'InsuranceCompanyName'         => $insuranceInfo->company_name ?? '',
@@ -348,7 +348,7 @@ class AdminController extends Controller
             $serviceDate    = $user->service_agreement_start_date ? Carbon::parse($user->service_agreement_start_date) : null;
 
             $columns = [
-                'LicenseNumber'                => Carbon::now()->format('d.m.Y').'-052-'.$user->user_code ?? '',
+                'LicenseNumber'                => Carbon::now()->format('dmY').'-052-'.$user->user_code ?? '',
                 'LicenseStartDate'             => Carbon::now()->format('d.m.Y') ?? '',
                 'Citizenship'                  => 'РФ',
                 'OrgForm'                      => '',
@@ -372,7 +372,7 @@ class AdminController extends Controller
                 'LicenseDecision'              => 'Приказ',
                 'LicenseDecisionDate'          => Carbon::now()->format('d.m.Y') ?? '',
                 'LicenseEndDate'               => Carbon::now()->addYears(5)->format('d.m.Y') ?? '',
-                'InsuranceContractNumber'      => $insuranceInfo->policy_number ?? '',
+                'InsuranceContractNumber'      => isset($insuranceInfo->policy_number) ? '="' . $insuranceInfo->policy_number . '"' : '',
                 'InsuranceContractStartDate'   => $insuranceStart ? $insuranceStart->format('d.m.Y') : '',
                 'InsuranceContractEndDate'     => $insuranceEnd ? $insuranceEnd->format('d.m.Y') : '',
                 'InsuranceCompanyName'         => $insuranceInfo->company_name ?? '',
